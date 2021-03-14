@@ -2,9 +2,12 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
+USERNAME = "rosh"
+PASSWORD = "rosh"
 
-@app.get('/')
+from app import routes  # noqa
+
+
+@app.get("/")
 async def home():
-    return {
-        "status": "OK"
-    }
+    return {"status": "OK"}
