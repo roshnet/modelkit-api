@@ -12,9 +12,6 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
-USERNAME = "rosh"
-PASSWORD = "rosh"
-
 from app import routes  # noqa
 
 
