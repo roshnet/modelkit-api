@@ -6,18 +6,19 @@ from app import app
 from app.config import ACCESS_TOKEN_KEY
 from app.database import db
 from app.database.models import User
-from fastapi import Request
+from fastapi import Request, Response, status
 from fastapi.responses import JSONResponse
 
 
 @app.post("/login")
-async def login(request: Request):
+async def login(request: Request, response: Response):
     body = await request.json()
     u = body["username"]
     p = hashlib.sha256(str.encode(body["password"])).hexdigest()
 
     result = db.query(User).filter_by(username=u, password_hash=p).first()
     if result is None:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"result": "fail", "reason": "Incorrect credentials"}
 
     payload = {

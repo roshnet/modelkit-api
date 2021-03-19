@@ -6,12 +6,12 @@ from app import app
 from app.config import ACCESS_TOKEN_KEY
 from app.database import db
 from app.database.models import User
-from fastapi import Request
+from fastapi import Request, Response, status
 from starlette.responses import JSONResponse
 
 
 @app.post("/signup")
-async def signup(req: Request):
+async def signup(req: Request, response: Response):
     body = await req.json()
     username = body["username"]
     name = body["name"]
@@ -20,6 +20,7 @@ async def signup(req: Request):
     # Check if username already exists
     exists = db.query(User).filter_by(username=username).first()
     if exists:
+        response.status_code = status.HTTP_409_CONFLICT
         return {"result": "fail", "reason": "Username already taken"}
 
     user = User(username=username, name=name, password_hash=password_hash)
