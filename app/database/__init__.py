@@ -1,7 +1,8 @@
+from app.config import SQLALCHEMY_CONNECTION_STRING
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine("mysql://root:aaaaa@localhost/mlrun")
+engine = create_engine(SQLALCHEMY_CONNECTION_STRING)
 
 Session = sessionmaker(bind=engine)
 
