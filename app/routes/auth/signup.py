@@ -29,6 +29,7 @@ async def signup(req: Request):
     payload = {
         "exp": datetime.utcnow() + timedelta(days=0, hours=24),
         "iat": datetime.utcnow(),
+        "iss": username,
     }
     token = jwt.encode(payload, ACCESS_TOKEN_KEY, algorithm="HS256")
     content = {"result": "ok"}

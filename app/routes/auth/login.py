@@ -17,14 +17,16 @@ async def login(request: Request):
     p = hashlib.sha256(str.encode(body["password"])).hexdigest()
 
     result = db.query(User).filter_by(username=u, password_hash=p).first()
-    if result is not None:
-        payload = {
-            "exp": datetime.utcnow() + timedelta(days=0, hours=24),
-            "iat": datetime.utcnow(),
-        }
-        token = jwt.encode(payload, ACCESS_TOKEN_KEY, algorithm="HS256")
-        content = {"result": "ok"}
-        response = JSONResponse(content=content)
-        response.headers["X-AUTH-TOKEN"] = f"{token}"
-        return response
-    return {"result": "fail"}
+    if result is None:
+        return {"result": "fail", "reason": "Incorrect credentials"}
+
+    payload = {
+        "exp": datetime.utcnow() + timedelta(days=0, hours=24),
+        "iat": datetime.utcnow(),
+        "iss": u,
+    }
+    token = jwt.encode(payload, ACCESS_TOKEN_KEY, algorithm="HS256")
+    content = {"result": "ok"}
+    response = JSONResponse(content=content)
+    response.headers["X-AUTH-TOKEN"] = f"{token}"
+    return response
