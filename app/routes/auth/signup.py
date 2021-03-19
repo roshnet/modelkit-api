@@ -30,7 +30,7 @@ async def signup(req: Request):
         "exp": datetime.utcnow() + timedelta(days=0, hours=24),
         "iat": datetime.utcnow(),
     }
-    token = jwt.encode(payload, ACCESS_TOKEN_KEY, algorithm="HS256").decode("utf-8")
+    token = jwt.encode(payload, ACCESS_TOKEN_KEY, algorithm="HS256")
     content = {"result": "ok"}
     response = JSONResponse(content=content)
     response.headers["X-AUTH-TOKEN"] = f"{token}"
