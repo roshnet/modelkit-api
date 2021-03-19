@@ -1,3 +1,4 @@
+import hashlib
 from datetime import datetime, timedelta
 
 import jwt
@@ -12,7 +13,8 @@ from fastapi.responses import JSONResponse
 @app.post("/login")
 async def login(request: Request):
     body = await request.json()
-    u, p = body["username"], body["password"]
+    u = body["username"]
+    p = hashlib.sha256(str.encode(body["password"])).hexdigest()
 
     result = db.query(User).filter_by(username=u, password_hash=p).first()
     if result is not None:
@@ -20,7 +22,7 @@ async def login(request: Request):
             "exp": datetime.utcnow() + timedelta(days=0, hours=24),
             "iat": datetime.utcnow(),
         }
-        token = jwt.encode(payload, ACCESS_TOKEN_KEY, algorithm="HS256").decode("utf-8")
+        token = jwt.encode(payload, ACCESS_TOKEN_KEY, algorithm="HS256")
         content = {"result": "ok"}
         response = JSONResponse(content=content)
         response.headers["X-AUTH-TOKEN"] = f"{token}"
