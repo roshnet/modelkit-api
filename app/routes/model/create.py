@@ -51,6 +51,8 @@ async def create_model(req: Request, resp: Response, model: UploadFile = File(..
         db.add(m)
         db.commit()
     except Exception as e:
+        db.rollback()
+        resp.status_code = status.HTTP_400_BAD_REQUEST
         return {"result": "fail", "reason": str(e)}
 
     return {"result": "ok", "filename": filename}
