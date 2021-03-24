@@ -16,7 +16,8 @@ class User(Base):
 
 class DeployedModel(Base):
     __tablename__ = "models"
-    model_id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String(30))
+    uid = Column(String(40))
     author_id = Column(Integer, ForeignKey(User.id))
     description = Column(String(1000))
