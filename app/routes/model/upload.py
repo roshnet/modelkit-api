@@ -1,12 +1,9 @@
 import json
 import os
-import uuid
 
 import jwt
 from app import app
 from app.config import ACCESS_TOKEN_KEY
-from app.database import db
-from app.database.models import DeployedModel, User
 from fastapi import File, Request, UploadFile, status
 from starlette.responses import Response
 
