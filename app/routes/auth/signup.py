@@ -6,16 +6,22 @@ from app import app
 from app.config import ACCESS_TOKEN_KEY
 from app.database import db
 from app.database.models import User
-from fastapi import Request, Response, status
+from fastapi import Response, status
+from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
 
+class RequestBody(BaseModel):
+    username: str
+    name: str
+    password: str
+
+
 @app.post("/signup")
-async def signup(req: Request, response: Response):
-    body = await req.json()
-    username = body["username"]
-    name = body["name"]
-    password_hash = hashlib.sha256(str.encode(body["password"])).hexdigest()
+async def signup(body: RequestBody, response: Response):
+    username = body.username
+    name = body.name
+    password_hash = hashlib.sha256(str.encode(body.password)).hexdigest()
 
     # Check if username already exists
     exists = db.query(User).filter_by(username=username).first()

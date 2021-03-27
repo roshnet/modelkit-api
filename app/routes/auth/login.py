@@ -6,15 +6,20 @@ from app import app
 from app.config import ACCESS_TOKEN_KEY
 from app.database import db
 from app.database.models import User
-from fastapi import Request, Response, status
+from fastapi import Response, status
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+
+
+class RequestBody(BaseModel):
+    username: str
+    password: str
 
 
 @app.post("/login")
-async def login(request: Request, response: Response):
-    body = await request.json()
-    u = body["username"]
-    p = hashlib.sha256(str.encode(body["password"])).hexdigest()
+async def login(body: RequestBody, response: Response):
+    u = body.username
+    p = hashlib.sha256(str.encode(body.password)).hexdigest()
 
     result = db.query(User).filter_by(username=u, password_hash=p).first()
     if result is None:
