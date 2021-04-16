@@ -17,8 +17,10 @@ class RequestBody(BaseModel):
 async def train(req: RequestBody):
     model_file = os.path.join(STORAGE_DIR, req.model_uid)
 
-    clf = joblib.load(open(model_file, "rb"))
-
+    try:
+        clf = joblib.load(open(model_file, "rb"))
+    except FileNotFoundError:
+        return {"status": "fail", "reason": "Model binary not found"}
     if not hasattr(clf, "predict"):
         return {"status": "ok"}
 
@@ -27,5 +29,4 @@ async def train(req: RequestBody):
     except Exception as e:
         return {"status": "fail", "reason": str(e)}
 
-    print(prediction)
     return {"status": "ok", "prediction": str(prediction)}
