@@ -4,3 +4,4 @@ temp/
 .vscode/
 .env
 storage/*
+.deta/
