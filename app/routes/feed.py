@@ -6,5 +6,11 @@ from app.database.models import User
 
 @app.get("/feed")
 async def feed(start=0, count=10):
-    models = db.query(Model).join(User).offset(start).limit(count).all()
+    models = (
+        db.query(Model.name, Model.description, Model.uid, User.username)
+        .join(User)
+        .offset(start)
+        .limit(count)
+        .all()
+    )
     return {"status": "ok", "models": models}
