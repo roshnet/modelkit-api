@@ -25,7 +25,7 @@ async def train(req: RequestBody, resp: Response):
         resp.status_code = status.HTTP_404_NOT_FOUND
         return {"status": "fail", "reason": "Model binary not found"}
     if not hasattr(clf, "predict"):
-        return {"status": "ok"}
+        return {"status": "fail"}
 
     try:
         prediction = clf.predict(req.xtest)
